@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from src.exceptions import ConfigError
+from src.eu_energy_pipeline.exceptions import ConfigError
 
 load_dotenv()
 
