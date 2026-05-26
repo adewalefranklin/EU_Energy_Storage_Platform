@@ -54,7 +54,9 @@ class S3Loader:
             )
 
             self.s3_client.put_object(
-                Bucket=self.bucket_name, Key=s3_key, Body=json.dumps(payload, indent=2),
+                Bucket=self.bucket_name,
+                Key=s3_key,
+                Body=json.dumps(payload, indent=2),
                 ContentType="application/json",
             )
             self.logger.info(
