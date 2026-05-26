@@ -1,0 +1,6 @@
+boto3
+requests
+pyspark
+apache-airflow
+snowflake-connector-python
+python-dotenv
