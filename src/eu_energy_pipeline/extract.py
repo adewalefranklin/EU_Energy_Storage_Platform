@@ -10,34 +10,35 @@ class Extractor:
         self.base_url = Config.get("AGSI_BASE_URL")
         self.logger = get_logger(__name__)
 
-    def fetch_storage_data(
-        self, start_date, end_date, country=None, company=None, facility=None
-    ):
-        self.logger.info(f"Fetching AGSI+ storage data from {start_date} to {end_date}")
+    def fetch_data(self, endpoint, params):
 
-        params = {"from": start_date, "to": end_date}
+        self.logger.info(f"Fetching AGSI+ data from endpoint: {endpoint}")
 
-        if country:
-            params["country"] = country
+        url = f"{self.base_url}/{endpoint}"
 
-        if company:
-            params["company"] = company
-
-        if facility:
-            params["facility"] = facility
-
-        url = f"{self.base_url}/api"
-
-        headers = {"x-key": self.api_key}
+        headers = {
+            "x-key": self.api_key
+        }
 
         try:
-            response = requests.get(url=url, headers=headers, params=params, timeout=30)
+            response = requests.get(
+                url=url,
+                headers=headers,
+                params=params,
+                timeout=30
+            )
 
             response.raise_for_status()
+
             data = response.json()
 
-            self.logger.info("Successfully fetched AGSI+ storage data")
+            self.logger.info(
+                f"Successfully fetched AGSI+ {endpoint} data"
+            )
+
             return data
 
         except Exception as e:
-            raise ExtractError(f"Failed to fetch AGSI+ data: {str(e)}")
+            raise ExtractError(
+                f"Failed to fetch AGSI+ {endpoint} data: {str(e)}"
+            )
