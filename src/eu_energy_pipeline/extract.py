@@ -16,29 +16,18 @@ class Extractor:
 
         url = f"{self.base_url}/{endpoint}"
 
-        headers = {
-            "x-key": self.api_key
-        }
+        headers = {"x-key": self.api_key}
 
         try:
-            response = requests.get(
-                url=url,
-                headers=headers,
-                params=params,
-                timeout=30
-            )
+            response = requests.get(url=url, headers=headers, params=params, timeout=30)
 
             response.raise_for_status()
 
             data = response.json()
 
-            self.logger.info(
-                f"Successfully fetched AGSI+ {endpoint} data"
-            )
+            self.logger.info(f"Successfully fetched AGSI+ {endpoint} data")
 
             return data
 
         except Exception as e:
-            raise ExtractError(
-                f"Failed to fetch AGSI+ {endpoint} data: {str(e)}"
-            )
+            raise ExtractError(f"Failed to fetch AGSI+ {endpoint} data: {str(e)}")

@@ -1,4 +1,3 @@
-from eu_energy_pipeline.extract import Extractor
 from eu_energy_pipeline.exceptions import LoadError
 from eu_energy_pipeline.logger import get_logger
 import boto3
@@ -27,7 +26,7 @@ class S3Loader:
         self.prefix = prefix
         self.bucket_name = aws_bucket_name
 
-    def s3_uploader(self, data, ingestion_date):
+    def s3_uploader(self, data, endpoint, ingestion_date):
         try:
             self.logger.info(f"Initiating data upload to S3 bucket: {self.bucket_name}")
 
@@ -36,8 +35,10 @@ class S3Loader:
             month = today.strftime("%m")
             day = today.strftime("%d")
             timestamp = today.strftime("%H%M%S")
+
             payload = {
                 "ingestion_date": ingestion_date,
+                "endpoint": endpoint,
                 "data": data,
                 "year": year,
                 "month": month,
@@ -47,21 +48,19 @@ class S3Loader:
 
             s3_key = (
                 f"{self.prefix}/"
+                f"endpoint={endpoint}/"
                 f"year={year}/"
                 f"month={month}/"
                 f"day={day}/"
-                f"agsi_storage_{timestamp}.json"
+                f"agsi_{endpoint}_{timestamp}.json"
             )
-
             self.s3_client.put_object(
                 Bucket=self.bucket_name,
                 Key=s3_key,
-                Body=json.dumps(payload, indent=2),
+                Body=json.dumps(payload),
                 ContentType="application/json",
             )
-            self.logger.info(
-                f"Successfully uploaded data to S3 bucket: {self.bucket_name} with key: {s3_key}"
-            )
+            self.logger.info(f"Successfully uploaded data to S3 with key: {s3_key}")
             return s3_key
         except Exception as e:
             raise LoadError(f"Failed to upload data to S3: {str(e)}")
