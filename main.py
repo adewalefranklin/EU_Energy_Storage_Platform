@@ -20,11 +20,7 @@ def main():
         "to": "2026-06-27",
     }
 
-    pipeline.run(
-        endpoint,
-        params,
-        ingestion_date="2026-06-27"
-    )
+    pipeline.run(endpoint, params, ingestion_date="2026-06-27")
 
 
 if __name__ == "__main__":
