@@ -1,6 +1,6 @@
 {{ config(materialized='table') }}
 
-select
+select distinct
     facility_id,
     country,
     max_capacity_gwh,

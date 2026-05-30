@@ -1,0 +1,71 @@
+version: 2
+
+models:
+
+  - name: dim_customer
+    description: >
+      Customer master dimension containing customer credit,
+      risk, contract, and facility information.
+
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_contract
+    description: >
+      Contract master dimension containing contract validity
+      dates and pricing information.
+
+    columns:
+      - name: contract_id
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_facility
+    description: >
+      Facility master dimension containing storage facility
+      characteristics and operational ownership information.
+
+    columns:
+      - name: facility_id
+        tests:
+          - unique
+          - not_null
+
+  - name: fact_sales_operations
+    description: >
+      Fact table containing capacity bookings,
+      gas nominations, gas volumes, and market pricing.
+
+    columns:
+      - name: booking_id
+        tests:
+          - not_null
+
+      - name: customer_id
+        tests:
+          - not_null
+
+      - name: facility_id
+        tests:
+          - not_null
+
+  - name: customer_risk
+    description: >
+      Business mart combining customer,
+      contract, and operational activity
+      for risk exposure analysis.
+
+  - name: facility_utilization
+    description: >
+      Business mart providing facility utilization,
+      capacity usage, and operational activity metrics.
+
+  - name: contract_analytics
+    description: >
+      Business mart providing contract performance,
+      contract status, customer activity,
+      and contract value analysis.
