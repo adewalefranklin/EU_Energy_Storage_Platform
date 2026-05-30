@@ -140,28 +140,90 @@ gold/
 * Realistic enterprise join scenarios
 * Handling of inconsistent business keys and column names
 * Structured and unstructured data preparation
+* Snowflake external stage integration
+* Snowflake raw and clean layer modelling
+* Schema inference using Snowflake INFER_SCHEMA
+* Automated Parquet ingestion using COPY INTO
+* dbt staging layer implementation
+* Analytics schema separation (RAW → ANALYTICS)
+* Git version control and project organization
+* Pytest-based unit testing with mocking
+* Config-driven pipeline architecture
+* Centralized logging and exception handling
+
+---
+
+# Snowflake Data Warehouse Layer
+
+Implemented Components:
+
+* External stages connected to AWS S3
+* Storage integration using IAM role-based access
+* Parquet file ingestion
+* Raw layer modelling
+* Clean layer modelling
+* Schema inference with INFER_SCHEMA
+* COPY INTO ingestion pipelines
+* Analytics schema for dbt models
+
+Current Snowflake Architecture:
+
+```text
+AWS S3 (Gold Layer)
+        ↓
+Snowflake Stage
+        ↓
+RAW Tables
+        ↓
+CLEAN Tables
+        ↓
+ANALYTICS Schema (dbt)
+```
+
+---
+
+# dbt Integration
+
+Implemented Components:
+
+* dbt project initialization
+* Snowflake profile configuration
+* Analytics schema integration
+* Staging layer models
+
+Current Models:
+
+```text
+ANALYTICS
+├── STG_CONTRACT_MASTER
+├── STG_CUSTOMER_MASTER
+├── STG_FACILITY_MASTER
+└── STG_SALES_OPERATIONS
+```
+
+Business Goal:
+
+Create reusable, tested, and documented analytical models for downstream reporting and business intelligence.
 
 ---
 
 # Future Enhancements
 
-## Snowflake Integration
+## dbt
 
-* External stages
-* COPY INTO pipelines
-* Warehouse modelling
-
-## dbt Integration
-
-* Tests
-* Documentation
-* Data lineage
+* Dimension models
+* Fact tables
+* Business marts
+* Data quality tests
+* Documentation generation
+* Data lineage visualization
 * Incremental models
 
 ## Airflow Orchestration
 
 * End-to-end workflow scheduling
 * Monitoring and retries
+* Automated Snowflake loading orchestration
 
 ## PDF Processing Pipeline
 
@@ -179,11 +241,13 @@ Planned analytical dashboards for:
 * Facility operations
 * Commercial sales operations
 * Contract analytics
+* Storage utilization analytics
 
----
+## CI/CD
 
-# Project Goal
+Future support for:
 
-This project focuses on architectural design, enterprise modelling, and real-world data engineering challenges rather than only basic ETL implementation.
-
-It simulates how enterprise energy companies build scalable data platforms for analytics, operations, and decision-making.
+* Automated deployment pipelines
+* dbt deployment workflows
+* Infrastructure validation
+* Production release automation
