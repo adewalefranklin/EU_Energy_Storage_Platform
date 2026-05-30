@@ -145,8 +145,13 @@ gold/
 * Schema inference using Snowflake INFER_SCHEMA
 * Automated Parquet ingestion using COPY INTO
 * dbt staging layer implementation
+* Dimensional modelling (Dimensions & Facts)
+* Business mart creation
+* SCD Type 2 historical tracking using dbt Snapshots
+* Data quality testing with dbt Tests
+* Data lineage and documentation with dbt Docs
 * Analytics schema separation (RAW → ANALYTICS)
-* Git version control and project organization
+* GitHub Actions CI pipeline
 * Pytest-based unit testing with mocking
 * Config-driven pipeline architecture
 * Centralized logging and exception handling
@@ -164,7 +169,8 @@ Implemented Components:
 * Clean layer modelling
 * Schema inference with INFER_SCHEMA
 * COPY INTO ingestion pipelines
-* Analytics schema for dbt models
+* Analytics schema separation
+* Snapshot schema for historical tracking
 
 Current Snowflake Architecture:
 
@@ -177,7 +183,9 @@ RAW Tables
         ↓
 CLEAN Tables
         ↓
-ANALYTICS Schema (dbt)
+ANALYTICS Schema
+        ↓
+SNAPSHOTS Schema
 ```
 
 ---
@@ -190,34 +198,94 @@ Implemented Components:
 * Snowflake profile configuration
 * Analytics schema integration
 * Staging layer models
+* Dimension models
+* Fact models
+* Business marts
+* Data quality tests
+* Data lineage generation
+* Documentation generation
+* SCD Type 2 snapshots
 
 Current Models:
 
 ```text
 ANALYTICS
+
+STAGING
 ├── STG_CONTRACT_MASTER
 ├── STG_CUSTOMER_MASTER
 ├── STG_FACILITY_MASTER
 └── STG_SALES_OPERATIONS
+
+DIMENSIONS
+├── DIM_CONTRACT
+├── DIM_CUSTOMER
+└── DIM_FACILITY
+
+FACTS
+└── FACT_SALES_OPERATIONS
+
+MARTS
+├── CUSTOMER_RISK
+├── FACILITY_UTILIZATION
+└── CONTRACT_ANALYTICS
+```
+
+Current Snapshots:
+
+```text
+SNAPSHOTS
+└── SNAP_CUSTOMER_MASTER
 ```
 
 Business Goal:
 
-Create reusable, tested, and documented analytical models for downstream reporting and business intelligence.
+Create reusable, tested, documented, and historically traceable analytical models for downstream reporting, risk management, and business intelligence.
+
+---
+
+# Current Data Platform Architecture
+
+```text
+API / Departmental Data Sources
+                ↓
+AWS S3 Raw Layer
+                ↓
+AWS Glue (PySpark)
+                ↓
+AWS S3 Gold Layer
+                ↓
+Snowflake Stage
+                ↓
+RAW Tables
+                ↓
+CLEAN Tables
+                ↓
+dbt Staging Models
+                ↓
+Dimensions & Facts
+                ↓
+Business Marts
+                ↓
+Snapshots (SCD2)
+                ↓
+Power BI
+```
+
+---
+
+# CI/CD
+
+Implemented Components:
+
+* GitHub Actions workflow
+* Automated pytest execution
+* Dependency validation
+* dbt project validation
 
 ---
 
 # Future Enhancements
-
-## dbt
-
-* Dimension models
-* Fact tables
-* Business marts
-* Data quality tests
-* Documentation generation
-* Data lineage visualization
-* Incremental models
 
 ## Airflow Orchestration
 
@@ -243,11 +311,20 @@ Planned analytical dashboards for:
 * Contract analytics
 * Storage utilization analytics
 
-## CI/CD
+## Advanced CI/CD
 
 Future support for:
 
-* Automated deployment pipelines
-* dbt deployment workflows
+* Automated dbt deployment pipelines
+* Snowflake environment promotion
 * Infrastructure validation
 * Production release automation
+
+## Data Governance
+
+Future support for:
+
+* Role-Based Access Control (RBAC)
+* Data masking policies
+* Row-level security
+* Data catalog integration
