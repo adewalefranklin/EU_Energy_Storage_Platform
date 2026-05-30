@@ -1,5 +1,9 @@
 # EU Energy Storage Platform
 
+
+![Pipeline Architecture](docs/screenshots/eu_energy_storage_architecture.png)
+
+
 An enterprise-style cloud data engineering platform that simulates real-world energy storage operations, customer risk management, sales operations, and contract management workflows using AWS, Spark, Snowflake, and medallion architecture principles.
 
 ## Project Overview
