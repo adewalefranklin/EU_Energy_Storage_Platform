@@ -336,19 +336,3 @@ Future support for:
 * Data masking policies
 * Row-level security
 * Data catalog integration
-
-Future support for:
-
-* Automated dbt deployment pipelines
-* Snowflake environment promotion
-* Infrastructure validation
-* Production release automation
-
-## Data Governance
-
-Future support for:
-
-* Role-Based Access Control (RBAC)
-* Data masking policies
-* Row-level security
-* Data catalog integration
