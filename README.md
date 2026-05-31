@@ -291,11 +291,15 @@ Implemented Components:
 
 # Future Enhancements
 
-## Airflow Orchestration
+## Expanded Airflow Orchestration
 
-* End-to-end workflow scheduling
-* Monitoring and retries
-* Automated Snowflake loading orchestration
+Future improvements will include:
+
+* Adding AWS Glue transformation tasks to the Airflow DAG
+* Orchestrating Snowflake ingestion after S3/Glue processing
+* Adding task-level alerts and failure notifications
+* Creating separate DAGs for different data domains
+* Implementing production-style retry and dependency strategies
 
 ## PDF Processing Pipeline
 
@@ -316,6 +320,22 @@ Planned analytical dashboards for:
 * Storage utilization analytics
 
 ## Advanced CI/CD
+
+Future support for:
+
+* Automated dbt deployment pipelines
+* Snowflake environment promotion
+* Infrastructure validation
+* Production release automation
+
+## Data Governance
+
+Future support for:
+
+* Role-Based Access Control (RBAC)
+* Data masking policies
+* Row-level security
+* Data catalog integration
 
 Future support for:
 
