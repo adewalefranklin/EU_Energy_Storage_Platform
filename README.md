@@ -159,6 +159,10 @@ gold/
 * Pytest-based unit testing with mocking
 * Config-driven pipeline architecture
 * Centralized logging and exception handling
+* Apache Airflow orchestration for AGSI+ API extraction workflows
+* Automated raw data ingestion from AGSI+ storage and facility endpoints into AWS S3
+* Dockerized Airflow execution environment
+* Task dependency management, monitoring, and retry-ready workflow structure
 
 ---
 
