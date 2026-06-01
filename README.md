@@ -406,7 +406,6 @@ Future support for:
 
 Future support for:
 
-* Role-Based Access Control (RBAC)
 * Data masking policies
 * Row-level security
 * Data catalog integration
