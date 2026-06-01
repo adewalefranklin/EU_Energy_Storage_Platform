@@ -19,7 +19,7 @@ def fetch_load_storage_agsi_data():
     endpoint = "storage"
 
     params = {
-        "country": "DE",
+        "country": "AT",
         "from": "2024-01-01",
         "to": "2024-01-31",
     }
@@ -54,7 +54,7 @@ def fetch_load_facility_agsi_data():
     endpoint = "facility"
 
     params = {
-        "country": "DE",
+        "country": "AT",
         "from": "2024-01-01",
         "to": "2024-01-31",
     }
