@@ -175,10 +175,15 @@ Implemented Components:
 * Parquet file ingestion
 * Raw layer modelling
 * Clean layer modelling
-* Schema inference with INFER_SCHEMA
-* COPY INTO ingestion pipelines
+* Schema inference with `INFER_SCHEMA`
+* `COPY INTO` ingestion pipelines
 * Analytics schema separation
 * Snapshot schema for historical tracking
+* Role-Based Access Control (RBAC)
+* Dedicated warehouses for workload isolation
+* User, role, and warehouse governance
+* Compute resource management and scaling strategies
+* Fine-grained database, schema, and table-level access control
 
 Current Snowflake Architecture:
 
@@ -187,13 +192,45 @@ AWS S3 (Gold Layer)
         ↓
 Snowflake Stage
         ↓
-RAW Tables
+RAW Schema
         ↓
-CLEAN Tables
+CLEAN Schema
         ↓
 ANALYTICS Schema
         ↓
 SNAPSHOTS Schema
+```
+
+Security & Governance Architecture:
+
+```text
+Users
+        ↓
+Roles
+        ↓
+Warehouses
+        ↓
+Database Access
+        ↓
+Schema Access
+        ↓
+Table/View Access
+```
+
+Compute Architecture:
+
+```text
+sales_analyst_wh
+        ↓
+Sales Reporting & Analytics
+
+risk_analyst_wh
+        ↓
+Risk Analysis & Monitoring
+
+ml_ai_team_wh
+        ↓
+Machine Learning & Advanced Analytics
 ```
 
 ---
