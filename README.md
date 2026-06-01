@@ -235,6 +235,39 @@ Machine Learning & Advanced Analytics
 
 ---
 
+## Warehouse Strategy
+
+Implemented Components:
+
+* Dedicated warehouses for workload isolation
+* Team-specific compute resource allocation
+* Role-based warehouse access control
+* Auto-suspend and auto-resume for cost optimization
+* Warehouse sizing based on workload requirements
+* Foundation for future multi-cluster scaling
+
+Current Warehouse Design:
+
+```text
+COMPUTE_WH
+        ↓
+Administrative & Development Activities
+
+SALES_ANALYST_WH
+        ↓
+Sales Reporting & Dashboard Analytics
+
+RISK_ANALYST_WH
+        ↓
+Risk Monitoring & Contract Analytics
+
+ML_AI_TEAM_WH
+        ↓
+Machine Learning & Advanced Analytics
+```
+
+---
+
 # dbt Integration
 
 Implemented Components:
