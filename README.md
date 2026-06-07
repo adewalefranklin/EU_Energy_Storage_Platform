@@ -216,7 +216,7 @@ gold/
 
 Implemented Components:
 
-* Apache Airflow 2.x
+* Apache Airflow 3.x
 * Dockerized Airflow environment
 * DAG: `extract_load`
 * DAG: `eu_energy_glue_orchestration`
