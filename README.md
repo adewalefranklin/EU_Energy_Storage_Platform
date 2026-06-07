@@ -4,7 +4,7 @@
 ![Pipeline Architecture](docs/screenshots/eu_energy_storage_architecture.png)
 
 
-An enterprise-style cloud data engineering platform that simulates real-world energy storage operations, customer risk management, sales operations, and contract management workflows using AWS, Spark, Snowflake, and medallion architecture principles.
+An enterprise-style cloud data engineering platform that simulates real-world energy storage operations, customer risk management, sales operations, and contract management workflows using AWS, Spark, Snowflake, dbt, and Apache Airflow.
 
 ## Project Overview
 
@@ -20,10 +20,21 @@ The platform ingests structured and unstructured datasets from multiple simulate
 The project implements a medallion architecture approach:
 
 ```text
-Raw Layer   → source ingestion
-Silver Layer → cleaned standardized parquet datasets
-Gold Layer  → business-ready master tables
+Raw Layer     → Source ingestion
+Silver Layer  → Cleaned and standardized Parquet datasets
+Gold Layer    → Business-ready master tables
 ```
+---
+
+## Key Achievements
+
+* Built an end-to-end cloud data platform using AWS, Snowflake, dbt, and Apache Airflow
+* Implemented Snowflake RBAC, warehouse isolation, and governance controls
+* Implemented medallion architecture across four business domains
+* Implemented AWS Glue-based medallion processing across 11 Silver datasets and 4 Gold master tables
+* Created automated orchestration for RAW → SILVER → GOLD processing
+* Designed dimensional models and business marts for analytics consumption
+* Implemented CI/CD, testing, governance, and warehouse isolation strategies
 
 ---
 
@@ -31,12 +42,21 @@ Gold Layer  → business-ready master tables
 
 ## Technologies Used
 
+* Python
 * AWS S3
 * AWS Glue
+* AWS Glue Jobs
+* AWS Glue Data Catalog
+* AWS IAM
 * PySpark
 * Snowflake
+* Snowflake RBAC
+* dbt
+* Apache Airflow
+* Docker
+* GitHub Actions
+* Pytest
 * Parquet
-* Python
 * Medallion Architecture
 
 ---
@@ -64,9 +84,9 @@ Create a unified customer risk and exposure view.
 
 Datasets:
 
-* storage
+* storage_facilities
 * facility_maintenance
-* events
+* imbalance_events
 
 Gold Output:
 
@@ -136,33 +156,89 @@ gold/
 
 # Current Features
 
+### Data Engineering
+
 * Multi-domain enterprise data modelling
 * Raw → Silver → Gold medallion architecture
 * Spark transformations with AWS Glue
 * Parquet standardization
 * Business-oriented master table creation
 * Realistic enterprise join scenarios
-* Handling of inconsistent business keys and column names
-* Structured and unstructured data preparation
-* Snowflake external stage integration
-* Snowflake raw and clean layer modelling
-* Schema inference using Snowflake INFER_SCHEMA
-* Automated Parquet ingestion using COPY INTO
-* dbt staging layer implementation
-* Dimensional modelling (Dimensions & Facts)
-* Business mart creation
-* SCD Type 2 historical tracking using dbt Snapshots
-* Data quality testing with dbt Tests
-* Data lineage and documentation with dbt Docs
-* Analytics schema separation (RAW → ANALYTICS)
+
+### Snowflake
+
+* External stage integration
+* Schema inference with INFER_SCHEMA
+* COPY INTO ingestion
+* RAW/CLEAN architecture
+* RBAC implementation
+* Warehouse isolation strategy
+
+### Analytics Engineering
+
+* dbt staging models
+* Dimension models
+* Fact models
+* Business marts
+* Snapshots (SCD2)
+* Data tests
+* Documentation generation
+
+### Orchestration & DevOps
+
+* Apache Airflow orchestration
+* AWS Glue Job Operator integration
+* Dockerized execution environment
 * GitHub Actions CI pipeline
-* Pytest-based unit testing with mocking
-* Config-driven pipeline architecture
-* Centralized logging and exception handling
-* Apache Airflow orchestration for AGSI+ API extraction workflows
-* Automated raw data ingestion from AGSI+ storage and facility endpoints into AWS S3
-* Dockerized Airflow execution environment
-* Task dependency management, monitoring, and retry-ready workflow structure
+* Pytest unit testing
+* Config-driven architecture
+
+---
+
+
+# Airflow Orchestration
+
+Implemented Components:
+
+* Apache Airflow 2.x
+* DAG: `eu_energy_glue_orchestration`
+* Dockerized Airflow environment
+* AWS Glue Job Operator integration
+* Dependency-based workflow orchestration
+* Parallel execution of independent domains
+* DAG monitoring and execution tracking
+* Manual and schedule-based execution support
+
+---
+
+### Current DAG Structure
+
+```text
+Start
+        ↓
+
+RAW → SILVER
+├── Risk Management
+├── Sales Operations
+└── Facilities
+
+        ↓
+
+SILVER → GOLD
+├── Customer Master
+├── Facility Master
+├── Sales Operations
+└── Contract Master
+
+        ↓
+
+End
+```
+---
+
+### Business Goal:
+
+Automate and orchestrate the complete RAW → SILVER → GOLD transformation workflow while enforcing task dependencies and enabling scalable production scheduling.
 
 ---
 
@@ -185,7 +261,7 @@ Implemented Components:
 * Compute resource management and scaling strategies
 * Fine-grained database, schema, and table-level access control
 
-Current Snowflake Architecture:
+# Current Snowflake Architecture:
 
 ```text
 AWS S3 (Gold Layer)
@@ -316,11 +392,29 @@ SNAPSHOTS
 └── SNAP_CUSTOMER_MASTER
 ```
 
-Business Goal:
+### Business Goal:
 
 Create reusable, tested, documented, and historically traceable analytical models for downstream reporting, risk management, and business intelligence.
 
+
 ---
+
+# Testing Strategy
+
+Implemented Components:
+
+* Pytest unit testing
+* Mocking with pytest-mock
+* AWS API call mocking
+* Configuration mocking
+* CI validation through GitHub Actions
+
+### Business Goal:
+
+Ensure pipeline reliability, testability, and maintainability through automated validation of extraction and transformation logic.
+
+--- 
+
 
 # Current Data Platform Architecture
 
@@ -329,7 +423,13 @@ API / Departmental Data Sources
                 ↓
 AWS S3 Raw Layer
                 ↓
-AWS Glue (PySpark)
+Apache Airflow
+                ↓
+AWS Glue (RAW → SILVER)
+                ↓
+AWS S3 Silver Layer
+                ↓
+AWS Glue (SILVER → GOLD)
                 ↓
 AWS S3 Gold Layer
                 ↓
@@ -347,7 +447,7 @@ Business Marts
                 ↓
 Snapshots (SCD2)
                 ↓
-Power BI
+Power BI Dashboards
 ```
 
 ---
@@ -369,11 +469,25 @@ Implemented Components:
 
 Future improvements will include:
 
-* Adding AWS Glue transformation tasks to the Airflow DAG
-* Orchestrating Snowflake ingestion after S3/Glue processing
-* Adding task-level alerts and failure notifications
-* Creating separate DAGs for different data domains
-* Implementing production-style retry and dependency strategies
+* Scheduled production execution (@daily, cron scheduling)
+* Email and Slack alerting
+* Dynamic task generation
+* Data quality validation tasks
+* Event-driven workflows
+* Cross-DAG orchestration
+
+---
+
+## Snowflake Automation
+
+Future support for:
+
+* Snowflake Tasks
+* Snowpipe Auto-Ingest
+* Automated refresh pipelines
+* Metadata-driven ingestion
+
+---
 
 ## PDF Processing Pipeline
 
@@ -409,3 +523,5 @@ Future support for:
 * Data masking policies
 * Row-level security
 * Data catalog integration
+* Data Lineage automation
+* Data Quality monitoring

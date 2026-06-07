@@ -1,104 +1,86 @@
-from datetime import datetime, timezone
-from airflow import DAG
-from airflow.operators.python import PythonOperator
-from airflow.operators.empty import EmptyOperator
-from eu_energy_pipeline.config import Config
-from eu_energy_pipeline.extract import Extractor
-from eu_energy_pipeline.load import S3Loader
+from datetime import datetime
 
-dag = DAG(
-    dag_id="eu_energy_platform_elt",
-    start_date=datetime(2026, 5, 26),
+from airflow import DAG
+from airflow.operators.empty import EmptyOperator
+from airflow.providers.amazon.aws.operators.glue import GlueJobOperator
+
+
+AWS_REGION = "us-east-1"
+
+
+with DAG(
+    dag_id="eu_energy_glue_orchestration",
+    start_date=datetime(2026, 6, 7),
     schedule=None,
     catchup=False,
-    tags=["energy", "elt", "aws", "s3"],
-)
+    tags=["eu-energy", "glue", "medallion"],
+) as dag:
 
+    start = EmptyOperator(task_id="start")
 
-def fetch_load_storage_agsi_data():
-    endpoint = "storage"
-
-    params = {
-        "country": "AT",
-        "from": "2024-01-01",
-        "to": "2024-01-31",
-    }
-
-    ingestion_date = datetime.now(timezone.utc).date().isoformat()
-
-    extractor = Extractor()
-
-    data = extractor.fetch_data(
-        endpoint=endpoint,
-        params=params,
+    raw_to_silver_risk_mgt = GlueJobOperator(
+        task_id="raw_to_silver_risk_mgt",
+        job_name="raw_to_silver_risk_mgt.py",
+        region_name=AWS_REGION,
     )
 
-    loader = S3Loader(
-        aws_access_key_id=Config.get("AWS_ACCESS_KEY_ID"),
-        aws_secret_access_key=Config.get("AWS_SECRET_ACCESS_KEY"),
-        aws_region=Config.get("AWS_REGION"),
-        prefix=Config.get("PREFIX"),
-        aws_bucket_name=Config.get("AWS_BUCKET_NAME"),
+    raw_to_silver_sales_dept = GlueJobOperator(
+        task_id="raw_to_silver_sales_dept",
+        job_name="raw_to_silver_sales_dept.py",
+        region_name=AWS_REGION,
     )
 
-    s3_key = loader.s3_uploader(
-        data=data,
-        endpoint=endpoint,
-        ingestion_date=ingestion_date,
+    raw_to_silver_facilities = GlueJobOperator(
+        task_id="raw_to_silver_facilities",
+        job_name="raw_to_silver_facilities.py",
+        region_name=AWS_REGION,
     )
 
-    return s3_key
-
-
-def fetch_load_facility_agsi_data():
-    endpoint = "facility"
-
-    params = {
-        "country": "AT",
-        "from": "2024-01-01",
-        "to": "2024-01-31",
-    }
-
-    ingestion_date = datetime.now(timezone.utc).date().isoformat()
-
-    extractor = Extractor()
-
-    data = extractor.fetch_data(
-        endpoint=endpoint,
-        params=params,
+    silver_to_gold_customer_master = GlueJobOperator(
+        task_id="silver_to_gold_customer_master",
+        job_name="silver_to_gold_customer_master",
+        region_name=AWS_REGION,
     )
 
-    loader = S3Loader(
-        aws_access_key_id=Config.get("AWS_ACCESS_KEY_ID"),
-        aws_secret_access_key=Config.get("AWS_SECRET_ACCESS_KEY"),
-        aws_region=Config.get("AWS_REGION"),
-        prefix=Config.get("PREFIX"),
-        aws_bucket_name=Config.get("AWS_BUCKET_NAME"),
+    silver_to_gold_facility_master = GlueJobOperator(
+        task_id="silver_to_gold_facility_master",
+        job_name="facility master",
+        region_name=AWS_REGION,
     )
 
-    s3_key = loader.s3_uploader(
-        data=data,
-        endpoint=endpoint,
-        ingestion_date=ingestion_date,
+    silver_to_gold_sales_operations = GlueJobOperator(
+        task_id="silver_to_gold_sales_operations",
+        job_name="ales operations table",
+        region_name=AWS_REGION,
     )
 
-    return s3_key
+    silver_to_gold_contract_master = GlueJobOperator(
+        task_id="silver_to_gold_contract_master",
+        job_name="Contract Master Table",
+        region_name=AWS_REGION,
+    )
+
+    end = EmptyOperator(task_id="end")
 
 
-start = EmptyOperator(task_id="start")
+    start >> [
+        raw_to_silver_risk_mgt,
+        raw_to_silver_sales_dept,
+        raw_to_silver_facilities,
+    ]
 
-extract_load_storage_raw_to_s3 = PythonOperator(
-    task_id="fetch_load_storage_agsi_data_to_s3",
-    python_callable=fetch_load_storage_agsi_data,
-    dag=dag,
-)
+    raw_to_silver_risk_mgt >> silver_to_gold_customer_master
 
-extract_facility_load_raw_to_s3 = PythonOperator(
-    task_id="fetch_load_facility_agsi_data_to_s3",
-    python_callable=fetch_load_facility_agsi_data,
-    dag=dag,
-)
+    raw_to_silver_facilities >> silver_to_gold_facility_master
 
-end = EmptyOperator(task_id="end")
+    raw_to_silver_sales_dept >> [
+        silver_to_gold_sales_operations,
+        silver_to_gold_contract_master,
+    ]
 
-start >> extract_load_storage_raw_to_s3 >> extract_facility_load_raw_to_s3 >> end
+    [
+        silver_to_gold_customer_master,
+        silver_to_gold_facility_master,
+        silver_to_gold_sales_operations,
+        silver_to_gold_contract_master,
+    ] >> end
