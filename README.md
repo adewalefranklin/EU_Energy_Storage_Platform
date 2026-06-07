@@ -198,6 +198,8 @@ gold/
 
 # Airflow Orchestration
 
+![Airflow DAG](docs/screenshots/eu_energy_glue_orchestration.png)
+
 Implemented Components:
 
 * Apache Airflow 2.x
@@ -395,7 +397,6 @@ SNAPSHOTS
 ### Business Goal:
 
 Create reusable, tested, documented, and historically traceable analytical models for downstream reporting, risk management, and business intelligence.
-
 
 ---
 
