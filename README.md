@@ -38,6 +38,22 @@ Gold Layer    → Business-ready master tables
 
 ---
 
+## Platform Statistics
+
+```text
+* 4 Business Domains
+* 11 Silver Datasets
+* 4 Gold Master Tables
+* 2 Airflow DAGs
+* 4 Snowflake Warehouses
+* 3 Dimension Models
+* 1 Fact Model
+* 3 Business Marts
+* 1 SCD Type 2 Snapshot
+```
+
+---
+
 # Architecture
 
 ## Technologies Used
