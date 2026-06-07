@@ -198,22 +198,56 @@ gold/
 
 # Airflow Orchestration
 
-![Airflow DAG](docs/screenshots/eu_energy_glue_orchestration.png)
-
 Implemented Components:
 
 * Apache Airflow 2.x
-* DAG: `eu_energy_glue_orchestration`
 * Dockerized Airflow environment
+* DAG: `extract_load`
+* DAG: `eu_energy_glue_orchestration`
+* PythonOperator integration
 * AWS Glue Job Operator integration
 * Dependency-based workflow orchestration
 * Parallel execution of independent domains
 * DAG monitoring and execution tracking
 * Manual and schedule-based execution support
 
+Implemented DAGs:
+
+### `extract_load`
+
+
+![Airflow DAG Extract-Load](docs/screenshots/extract_load_dag.png)
+
+
+Purpose:
+
+Extract operational storage data from AGSI+ API endpoints and load raw JSON datasets into AWS S3 for downstream processing.
+
+Workflow:
+
+```text
+Start
+    ↓
+Extract Storage Data
+    ↓
+Extract Facility Data
+    ↓
+Load Raw JSON to S3
+    ↓
+End
+```
+
 ---
 
-### Current DAG Structure
+### `eu_energy_glue_orchestration`
+
+![Airflow DAG Glue](docs/screenshots/eu_energy_glue_orchestration.png)
+
+Purpose:
+
+Orchestrate AWS Glue jobs that transform raw datasets into standardized Silver datasets and business-ready Gold master tables.
+
+Workflow:
 
 ```text
 Start
@@ -236,13 +270,15 @@ SILVER → GOLD
 
 End
 ```
----
-
-### Business Goal:
-
-Automate and orchestrate the complete RAW → SILVER → GOLD transformation workflow while enforcing task dependencies and enabling scalable production scheduling.
 
 ---
+
+Business Goal:
+
+Automate and orchestrate the complete end-to-end data platform workflow, from API data extraction through medallion transformations, ensuring task dependencies, monitoring, scalability, and production-ready scheduling.
+
+---
+
 
 # Snowflake Data Warehouse Layer
 
