@@ -1,7 +1,37 @@
 # EU Energy Storage Platform
 
 
-![Pipeline Architecture](docs/screenshots/eu_energy_storage_architecture.png)
+          AGSI+ API
+               |
+               v
+       Python Extractor
+               |
+               v
+            AWS S3
+          (Raw Layer)
+               |
+               v
+         AWS Glue ETL
+         (PySpark)
+               |
+               v
+            AWS S3
+        (Silver / Gold)
+               |
+               v
+          Snowflake
+      Raw → Clean → Mart
+               |
+               v
+             dbt
+               |
+               v
+          Power BI
+          
+
+      Orchestration: Apache Airflow
+      Monitoring: CloudWatch
+      CI/CD: GitHub Actions
 
 
 An enterprise-style cloud data engineering platform that simulates real-world energy storage operations, customer risk management, sales operations, and contract management workflows using AWS, Spark, Snowflake, dbt, and Apache Airflow.

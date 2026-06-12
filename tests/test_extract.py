@@ -1,4 +1,7 @@
 from eu_energy_pipeline.extract import Extractor
+from eu_energy_pipeline.exceptions import ExtractError
+import pytest
+
 
 
 def test_extract_data_success(mocker):
@@ -23,3 +26,18 @@ def test_extract_data_success(mocker):
     result = extractor.fetch_data("test_endpoint", {"param1": "value1"})
 
     assert result == {"data": "test_data"}
+
+def test_extract_data_failure(mocker):
+
+    mocker.patch(
+        "eu_energy_pipeline.extract.requests.get",
+        side_effect=Exception("API failed")
+    )
+
+    extractor = Extractor()
+
+    with pytest.raises(ExtractError):
+        extractor.fetch_data(
+            "test_endpoint",
+            {"param1": "value1"}
+        )
