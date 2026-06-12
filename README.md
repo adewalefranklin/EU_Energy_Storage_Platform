@@ -1,27 +1,21 @@
 # EU Energy Storage Platform
 
 AGSI+ API
-    │
-    ▼
-Python Extractor
-    │
-    ▼
-AWS S3 Raw
-    │
-    ▼
-AWS Glue (PySpark)
-    │
-    ▼
-AWS S3 Silver / Gold
-    │
-    ▼
-Snowflake
-    │
-    ▼
-dbt
-    │
-    ▼
-Power BI
+│
+├── Python Extractor
+│
+├── AWS S3 Raw
+│
+├── AWS Glue (PySpark)
+│
+├── AWS S3 Silver / Gold
+│
+├── Snowflake
+│
+├── dbt
+│
+└── Power BI
+
 
 Platform Services
 ─────────────────
