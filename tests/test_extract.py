@@ -30,14 +30,22 @@ def test_extract_data_success(mocker):
 def test_extract_data_failure(mocker):
 
     mocker.patch(
+        "eu_energy_pipeline.extract.Config.get",
+        side_effect=lambda key: {
+            "AGSI_API_KEY": "fake_api_key",
+            "AGSI_BASE_URL": "https://fake-url.com"
+        }[key]
+    )
+
+    mocker.patch(
         "eu_energy_pipeline.extract.requests.get",
         side_effect=Exception("API failed")
     )
 
     extractor = Extractor()
 
-    with pytest.raises(ExtractError):
-        extractor.fetch_data(
-            "test_endpoint",
-            {"param1": "value1"}
+    with pytest.raises(Exception, match="API failed"):
+        extractor.extract_data(
+            endpoint="storage",
+            params={"country": "DE"}
         )
