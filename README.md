@@ -1,40 +1,33 @@
 # EU Energy Storage Platform
 
+Data Flow
+─────────
 
-          AGSI+ API
-               |
-               v
-       Python Extractor
-               |
-               v
-            AWS S3
-          (Raw Layer)
-               |
-               v
-         AWS Glue ETL
-         (PySpark)
-               |
-               v
-            AWS S3
-        (Silver / Gold)
-               |
-               v
-          Snowflake
-      Raw → Clean → Mart
-               |
-               v
-             dbt
-               |
-               v
-          Power BI
-          
-
-      Orchestration: Apache Airflow
-      Monitoring: CloudWatch
-      CI/CD: GitHub Actions
+AGSI+ API
+    ↓
+Python Extractor
+    ↓
+AWS S3 Raw
+    ↓
+AWS Glue (PySpark)
+    ↓
+AWS S3 Silver/Gold
+    ↓
+Snowflake
+    ↓
+dbt
+    ↓
+Power BI
 
 
-An enterprise-style cloud data engineering platform that simulates real-world energy storage operations, customer risk management, sales operations, and contract management workflows using AWS, Spark, Snowflake, dbt, and Apache Airflow.
+Platform Services
+─────────────────
+
+• Orchestration: Apache Airflow
+• Monitoring: AWS CloudWatch
+• CI/CD: GitHub Actions
+
+End-to-end cloud data platform for European energy storage analytics, built with Python, AWS, Snowflake, dbt, Airflow, and Power BI. The platform ingests operational and commercial data, applies ETL transformations, models business-ready datasets, and delivers analytical insights for risk, contracts, facilities, and sales operations.
 
 ## Project Overview
 
