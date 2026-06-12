@@ -24,7 +24,7 @@ Platform Services
 • AWS CloudWatch (Monitoring)
 • GitHub Actions (CI/CD)
 
-End-to-end cloud data platform for European energy storage analytics, built with Python, AWS, Snowflake, dbt, Airflow, and Power BI. The platform ingests operational and commercial data, applies ETL transformations, models business-ready datasets, and delivers analytical insights for risk, contracts, facilities, and sales operations.
+End-to-end cloud data platform for European energy storage analytics, built with Python, AWS, Snowflake, dbt, Airflow, and Power BI. The platform ingests operational and commercial data, performs ELT processing through AWS Glue and Snowflake, models business-ready datasets with dbt, and delivers analytical insights for risk, contracts, facilities, and sales operations.
 
 ## Project Overview
 
