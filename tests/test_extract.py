@@ -1,6 +1,7 @@
 from eu_energy_pipeline.extract import Extractor
 from eu_energy_pipeline.exceptions import ExtractError
 import pytest
+from requests.exceptions import RequestException
 
 
 
@@ -32,9 +33,9 @@ def test_extract_data_failure(mocker):
     mocker.patch(
         "eu_energy_pipeline.extract.Config.get",
         side_effect=lambda key: {
-            "API_KEY": "fake_api_key",
-            "BASE_URL": "https://fake-url.com"
-        }[key]
+            "AGSI_BASE_URL": "https://agsi.gie.eu/api",
+            "AGSI_API_KEY": "fake_api_key",
+        }[key],
     )
 
     mocker.patch(
@@ -44,9 +45,5 @@ def test_extract_data_failure(mocker):
 
     extractor = Extractor()
 
-    with pytest.raises(ExtractError, match="Failed to fetch data for fake_series_id"):
-        extractor.extract_data(
-            "fake_series_id",
-            "2024-01-01",
-            "2024-01-31"
-        )
+    with pytest.raises(ExtractError):
+        extractor.fetch_data("test_endpoint", {"param1": "value1"})
